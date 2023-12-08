@@ -11,24 +11,22 @@ import { panel, text } from '@metamask/snaps-sdk';
  * @returns The result of `snap_dialog`.
  * @throws If the request method is not valid for this snap.
  */
-export const onRpcRequest: OnRpcRequestHandler = async ({
-  origin,
-  request,
-}) => {
+
+export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
   switch (request.method) {
     case 'hello':
       return getFees().then(fees => {
         return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: 'confirmation',
-          content: panel([
-            text(`Hello, **${origin}**!`),
-            text(`Current gas fee estimates: ${fees}`)
-          ]),
-        },
-      })
-    });
+          method: 'snap_dialog',
+          params: {
+            type: 'alert',
+            content: panel([
+              text(`Hello, **${origin}**!`),
+              text(`Current gas fee estimates: ${fees}`),
+            ]),
+          }
+        });
+      });
     default:
       throw new Error('Method not found.');
   }
